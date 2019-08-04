@@ -15,6 +15,7 @@ import android.util.Log;
 
 public class GPSTracker extends Service implements LocationListener {
 
+
     private final Context mContext;
 
     // flag for GPS status
@@ -26,15 +27,15 @@ public class GPSTracker extends Service implements LocationListener {
     // flag for GPS status
     boolean canGetLocation = false;
 
-    Location location; // location
+    Location location = null; // location
     double latitude; // latitude
     double longitude; // longitude
 
     // The minimum distance to change Updates in meters
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1; // 1 meter
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1; // 10 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 3000; // 1 minute
+    private static final long MIN_TIME_BW_UPDATES = 1000; // 1 minute
 
     // Declaring a Location Manager
     protected LocationManager locationManager;
@@ -57,7 +58,6 @@ public class GPSTracker extends Service implements LocationListener {
             isNetworkEnabled = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no network provider is enabled
             } else {
@@ -67,9 +67,10 @@ public class GPSTracker extends Service implements LocationListener {
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                    Log.d("Network", "Network");
+                    Log.d("Network", "Network Enabled");
                     if (locationManager != null) {
-                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        location = locationManager
+                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                         if (location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
@@ -83,7 +84,7 @@ public class GPSTracker extends Service implements LocationListener {
                                 LocationManager.GPS_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
                                 MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                        Log.d("GPS Enabled", "GPS Enabled");
+                        Log.d("GPS", "GPS Enabled");
                         if (locationManager != null) {
                             location = locationManager
                                     .getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -97,10 +98,21 @@ public class GPSTracker extends Service implements LocationListener {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return location;
     }
 
+    /**
+     * Stop using GPS listener Calling this function will stop using GPS in your
+     * app
+     * */
+    public void stopUsingGPS() {
+        if (locationManager != null) {
+            locationManager.removeUpdates(GPSTracker.this);
+        }
+    }
 
     /**
      * Function to get latitude
@@ -109,6 +121,7 @@ public class GPSTracker extends Service implements LocationListener {
         if (location != null) {
             latitude = location.getLatitude();
         }
+
         // return latitude
         return latitude;
     }
@@ -141,10 +154,10 @@ public class GPSTracker extends Service implements LocationListener {
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
-        // Setting DialogHelp Title
+        // Setting Dialog Title
         alertDialog.setTitle("GPS is settings");
 
-        // Setting DialogHelp Message
+        // Setting Dialog Message
         alertDialog
                 .setMessage("GPS is not enabled. Do you want to go to settings menu?");
 
@@ -172,12 +185,6 @@ public class GPSTracker extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        float bestAccuracy = -1f;
-        if (location.getAccuracy() != 0.0f
-                && (location.getAccuracy() < bestAccuracy) || bestAccuracy == -1f) {
-            locationManager.removeUpdates(this);
-        }
-        bestAccuracy = location.getAccuracy();
     }
 
     @Override
@@ -196,10 +203,4 @@ public class GPSTracker extends Service implements LocationListener {
     public IBinder onBind(Intent arg0) {
         return null;
     }
-
-    public float getAccurecy()
-    {
-        return location.getAccuracy();
-    }
-
 }

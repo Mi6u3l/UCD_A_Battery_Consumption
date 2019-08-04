@@ -7,8 +7,8 @@ android {
         applicationId "com.miguelbragagomes.ucd_a_performance"
         minSdkVersion 15
         targetSdkVersion 29
-        versionCode 17
-        versionName "17.0"
+        versionCode 21
+        versionName "21"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
