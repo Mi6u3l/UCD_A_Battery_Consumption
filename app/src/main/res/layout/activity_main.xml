@@ -5,19 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    <Button
-        android:id="@+id/button_id"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="Get Current location"
-        android:onClick="startGPSTest"
-        />
-    <TextView
-        android:id="@+id/feedback"
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        />
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/button_id"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Get Current locationn"
+            android:layout_centerHorizontal="true"
+            android:onClick="startGPSTest"
+            />
+        <TextView
+            android:id="@+id/feedback"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            />
+
+    </RelativeLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
