@@ -18,6 +18,15 @@
             android:layout_centerHorizontal="true"
             android:onClick="startGPSTest"
             />
+        <Button
+            android:id="@+id/button_torch"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@id/button_id"
+            android:text="Toggle Flash Light"
+            android:layout_centerHorizontal="true"
+            android:onClick="toggleFlashLight"
+            />
         <TextView
             android:id="@+id/feedback"
             android:layout_width="match_parent"
