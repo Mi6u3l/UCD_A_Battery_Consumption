@@ -3,9 +3,13 @@ import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Vibrator;
+
 import android.view.View;
 import android.widget.TextView;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
+
 
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraAccessException;
@@ -18,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient fusedLocationClient;
     private CameraManager mCameraManager;
+    private Vibrator vibrator;
     private String mCameraId;
     private boolean torchOn = false;
 
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         try {
             mCameraId = mCameraManager.getCameraIdList()[0];
         } catch (CameraAccessException e) {
@@ -58,5 +64,14 @@ public class MainActivity extends AppCompatActivity {
             torchOn = !torchOn;
             mCameraManager.setTorchMode(mCameraId, torchOn);
         } catch (CameraAccessException e) { }
+    }
+
+    public void vibrate(View view) {
+        vibrator.vibrate(1000);
+    }
+
+    public void playSound(View view) {
+        final MediaPlayer mp = MediaPlayer.create(this, R.raw.sound);
+        mp.start();
     }
 }

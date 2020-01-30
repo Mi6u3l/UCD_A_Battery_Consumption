@@ -27,6 +27,24 @@
             android:layout_centerHorizontal="true"
             android:onClick="toggleFlashLight"
             />
+        <Button
+            android:id="@+id/button_vibrate"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@id/button_torch"
+            android:text="Vibrate"
+            android:layout_centerHorizontal="true"
+            android:onClick="vibrate"
+            />
+        <Button
+            android:id="@+id/button_playSound"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@id/button_vibrate"
+            android:text="Play sound"
+            android:layout_centerHorizontal="true"
+            android:onClick="playSound"
+            />
         <TextView
             android:id="@+id/feedback"
             android:layout_width="match_parent"
