@@ -1,4 +1,4 @@
-package com.example.ucd_a_performance;
+package ucd_a_performance;
 import android.content.Context;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,17 +6,17 @@ import android.os.Bundle;
 import android.os.Vibrator;
 
 import android.view.View;
-import android.widget.TextView;
-import android.location.LocationManager;
+import android.location.Location;
 import android.media.MediaPlayer;
 
 
 import android.hardware.camera2.CameraManager;
-import android.hardware.camera2.CameraAccessException;
+import android.widget.TextView;
 
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private CameraManager mCameraManager;
     private Vibrator vibrator;
     private String mCameraId;
+    private MediaPlayer mp;
     private boolean torchOn = false;
 
     @Override
@@ -34,44 +35,39 @@ public class MainActivity extends AppCompatActivity {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        try {
-            mCameraId = mCameraManager.getCameraIdList()[0];
-        } catch (CameraAccessException e) {
-
-        }
-
-
+        mCameraId = mCameraManager.getCameraIdList()[0];
     }
+
 
     public void startGPSTest(View view) {
-        GPSTracker gps = new GPSTracker(this);
         TextView feedback = findViewById(R.id.feedback);
-        // check if GPS location can get Location
-        if (gps.canGetLocation()) {
+        fusedLocationClient.getLastLocation()
+            .addOnSuccessListener(this, new OnSuccessListener <Location> () {
+                @Override
+                public void onSuccess(Location location) {
+                    // Got last known loation. In some rare situations this can be null.
+                    if (location != null) {
+                        double lon = location.getLongitude();
+                        double lat = location.getLatitude();
+                        // Renders location on the main view
+                        feedback.setText("Latitude " + lat + " Longitude " + lon);
+                    }
+                }
+            });
 
-            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-            if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                double lon = gps.getLongitude();
-                double lat = gps.getLatitude();
-                feedback.setText("Latitude " + lat + " Longitude " + lon);
-            }
-        }
     }
 
-    public void toggleFlashLight(View view) {
-        try {
-            torchOn = !torchOn;
-            mCameraManager.setTorchMode(mCameraId, torchOn);
-        } catch (CameraAccessException e) { }
+    public void toggleFlashLight() {
+        torchOn = !torchOn;
+        mCameraManager.setTorchMode(mCameraId, torchOn);
     }
 
-    public void vibrate(View view) {
+    public void vibrate() {
         vibrator.vibrate(1000);
     }
 
-    public void playSound(View view) {
-        final MediaPlayer mp = MediaPlayer.create(this, R.raw.sound);
+    public void playSound() {
+        mp = MediaPlayer.create(this, R.raw.sound);
         mp.start();
     }
 }
