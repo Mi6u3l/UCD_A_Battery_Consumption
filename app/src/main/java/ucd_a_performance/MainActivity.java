@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 
 
 import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CameraAccessException;
 import android.widget.TextView;
 
 
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private MediaPlayer mp;
     private boolean torchOn = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,12 +37,14 @@ public class MainActivity extends AppCompatActivity {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        mCameraId = mCameraManager.getCameraIdList()[0];
+        try {
+            mCameraId = mCameraManager.getCameraIdList()[0];
+        } catch (CameraAccessException e) {}
     }
 
 
     public void startGPSTest(View view) {
-        TextView feedback = findViewById(R.id.feedback);
+        final TextView feedback = findViewById(R.id.feedback);
         fusedLocationClient.getLastLocation()
             .addOnSuccessListener(this, new OnSuccessListener <Location> () {
                 @Override
@@ -57,16 +61,18 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void toggleFlashLight() {
+    public void toggleFlashLight(View view) {
         torchOn = !torchOn;
-        mCameraManager.setTorchMode(mCameraId, torchOn);
+        try {
+            mCameraManager.setTorchMode(mCameraId, torchOn);
+        }  catch (CameraAccessException e) {}
     }
 
-    public void vibrate() {
+    public void vibrate(View view) {
         vibrator.vibrate(1000);
     }
 
-    public void playSound() {
+    public void playSound(View view) {
         mp = MediaPlayer.create(this, R.raw.sound);
         mp.start();
     }
