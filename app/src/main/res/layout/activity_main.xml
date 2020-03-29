@@ -14,7 +14,7 @@
             android:id="@+id/button_gps"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="Get Current locationn"
+            android:text="Get Current location"
             android:layout_centerHorizontal="true"
             android:onClick="startGPSTest"
             />
@@ -44,6 +44,15 @@
             android:text="Play sound"
             android:layout_centerHorizontal="true"
             android:onClick="playSound"
+            />
+        <Button
+            android:id="@+id/button_getCalendar"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@id/button_playSound"
+            android:text="Get Calendar"
+            android:layout_centerHorizontal="true"
+            android:onClick="getDeviceCalendar"
             />
         <TextView
             android:id="@+id/feedback"

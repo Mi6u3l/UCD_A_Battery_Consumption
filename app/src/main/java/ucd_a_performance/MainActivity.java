@@ -13,7 +13,10 @@ import android.media.MediaPlayer;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraAccessException;
 import android.widget.TextView;
-
+import android.provider.CalendarContract.Calendars;
+import android.database.Cursor;
+import android.content.ContentResolver;
+import android.net.Uri;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -27,6 +30,14 @@ public class MainActivity extends AppCompatActivity {
     private String mCameraId;
     private MediaPlayer mp;
     private boolean torchOn = false;
+    // Projection array. Creating indices for this array instead of doing
+    // dynamic lookups improves performance.
+    public static final String[] EVENT_PROJECTION = new String[] {
+            Calendars.CALENDAR_DISPLAY_NAME,         // 0
+    };
+
+    // The indices for the projection array above.
+    private static final int PROJECTION_DISPLAY_NAME_INDEX = 0;
 
 
     @Override
@@ -75,5 +86,24 @@ public class MainActivity extends AppCompatActivity {
     public void playSound(View view) {
         mp = MediaPlayer.create(this, R.raw.sound);
         mp.start();
+    }
+
+    public void getDeviceCalendar(View view) {
+        final TextView feedback = findViewById(R.id.feedback);
+        // Run query
+        Cursor cur = null;
+        ContentResolver cr = getContentResolver();
+        Uri uri = Calendars.CONTENT_URI;
+        // Submit the query and get a Cursor object back.
+        cur = cr.query(uri, EVENT_PROJECTION, null, null, null);
+        while (cur.moveToNext()) {
+            String displayName = null;
+
+            // Get the field values
+            displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
+
+            // Do something with the values...
+            feedback.setText("Calendar " + displayName);
+        }
     }
 }
