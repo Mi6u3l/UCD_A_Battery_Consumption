@@ -17,10 +17,13 @@ import android.provider.CalendarContract.Calendars;
 import android.database.Cursor;
 import android.content.ContentResolver;
 import android.net.Uri;
+import android.speech.tts.TextToSpeech;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private String mCameraId;
     private MediaPlayer mp;
     private boolean torchOn = false;
+    private TextToSpeech textToSpeech;
+
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
     public static final String[] EVENT_PROJECTION = new String[] {
@@ -40,10 +45,19 @@ public class MainActivity extends AppCompatActivity {
     private static final int PROJECTION_DISPLAY_NAME_INDEX = 0;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+            textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int status) {
+                    textToSpeech.setLanguage(Locale.UK);
+                }
+            });
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
@@ -105,5 +119,9 @@ public class MainActivity extends AppCompatActivity {
             // Do something with the values...
             feedback.setText("Calendar " + displayName);
         }
+    }
+
+    public void speak(View view) {
+        textToSpeech.speak("UCD Advanced Software Engineering", TextToSpeech.QUEUE_FLUSH, null);
     }
 }
