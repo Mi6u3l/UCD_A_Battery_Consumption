@@ -111,10 +111,9 @@ public class MainActivity extends AppCompatActivity {
         // Submit the query and get a Cursor object back.
         cur = cr.query(uri, EVENT_PROJECTION, null, null, null);
         cur.moveToFirst();
-        String displayName = null;
 
         // Get the field values
-        displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
+        String displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
 
         feedback.setText(displayName);
     }
