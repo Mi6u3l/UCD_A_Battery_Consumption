@@ -110,15 +110,13 @@ public class MainActivity extends AppCompatActivity {
         Uri uri = Calendars.CONTENT_URI;
         // Submit the query and get a Cursor object back.
         cur = cr.query(uri, EVENT_PROJECTION, null, null, null);
-        while (cur.moveToNext()) {
-            String displayName = null;
+        cur.moveToFirst();
+        String displayName = null;
 
-            // Get the field values
-            displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
+        // Get the field values
+        displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
 
-            // Do something with the values...
-            feedback.setText("Calendar " + displayName);
-        }
+        feedback.setText(displayName);
     }
 
     public void speak(View view) {
